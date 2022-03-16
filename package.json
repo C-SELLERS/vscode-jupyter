@@ -49,12 +49,6 @@
     "activationEvents": [
         "onLanguage:python",
         "onLanguage:jupyter",
-        "onCommand:jupyter.viewOutput",
-        "onCommand:jupyter.export",
-        "onCommand:jupyter.exportAsPythonScript",
-        "onCommand:jupyter.exportToHTML",
-        "onCommand:jupyter.exportToPDF",
-        "onCommand:jupyter.notebookeditor.export",
         "onCommand:jupyter.createnewnotebook",
         "onCommand:jupyter.createnewinteractive",
         "onCommand:jupyter.importnotebook",
@@ -790,24 +784,6 @@
                 "category": "Jupyter"
             },
             {
-                "command": "jupyter.interactive.exportasnotebook",
-                "title": "%DataScience.exportDialogTitle%",
-                "shortTitle": "%DataScience.exportAsNotebook.shorttitle%",
-                "icon": "$(save-as)",
-                "enablement": "notebookType == interactive",
-                "category": "Jupyter"
-            },
-            {
-                "command": "jupyter.interactive.exportas",
-                "title": "%DataScience.notebookExport%",
-                "icon": {
-                    "light": "resources/light/export_to_python.svg",
-                    "dark": "resources/dark/export_to_python.svg"
-                },
-                "enablement": "notebookType == interactive",
-                "category": "Jupyter"
-            },
-            {
                 "command": "jupyter.interactive.copyCell",
                 "title": "%DataScience.interactiveCopyCell%",
                 "icon": "$(copy)",
@@ -893,12 +869,6 @@
                     "when": "notebookKernel =~ /^ms-toolsai.jupyter\\// && notebookType == 'jupyter-notebook' && config.jupyter.showOutlineButtonInNotebookToolbar && config.notebook.globalToolbar != true"
                 },
                 {
-                    "command": "jupyter.notebookeditor.export",
-                    "title": "%DataScience.notebookExportAs%",
-                    "group": "navigation@4",
-                    "when": "notebookType == 'jupyter-notebook' && isWorkspaceTrusted && config.notebook.globalToolbar != true && jupyter.ispythonnotebook"
-                },
-                {
                     "command": "jupyter.selectNativeJupyterUriFromToolBar",
                     "title": "%jupyter.command.jupyter.selectjupyteruri.title%",
                     "group": "overflow@1000",
@@ -909,27 +879,22 @@
                 {
                     "command": "jupyter.notebookeditor.restartkernel",
                     "group": "navigation/execute@1",
-                    "when": "notebookKernel =~ /^ms-toolsai.jupyter\\// && notebookType == 'jupyter-notebook' && isWorkspaceTrusted && jupyter.kernel.isjupyter"
+                    "when": "notebookType == 'jupyter-notebook' && isWorkspaceTrusted && jupyter.kernel.isjupyter"
                 },
                 {
                     "command": "jupyter.notebookeditor.interruptkernel",
                     "group": "navigation/execute@2",
-                    "when": "notebookKernel =~ /^ms-toolsai.jupyter\\// && notebookType == 'jupyter-notebook' && isWorkspaceTrusted && jupyter.kernel.isjupyter"
+                    "when": "notebookType == 'jupyter-notebook' && isWorkspaceTrusted && jupyter.kernel.isjupyter"
                 },
                 {
                     "command": "jupyter.openVariableView",
                     "group": "navigation@1",
-                    "when": "notebookKernel =~ /^ms-toolsai.jupyter\\// && notebookType == 'jupyter-notebook' && isWorkspaceTrusted && jupyter.ispythonnotebook && jupyter.kernel.isjupyter"
+                    "when": "notebookType == 'jupyter-notebook' && isWorkspaceTrusted && jupyter.ispythonnotebook && jupyter.kernel.isjupyter"
                 },
                 {
                     "command": "jupyter.openOutlineView",
                     "group": "navigation@2",
                     "when": "notebookType == 'jupyter-notebook' && config.jupyter.showOutlineButtonInNotebookToolbar"
-                },
-                {
-                    "command": "jupyter.notebookeditor.export",
-                    "group": "Jupyter",
-                    "when": "notebookType == 'jupyter-notebook' && isWorkspaceTrusted && jupyter.ispythonnotebook"
                 },
                 {
                     "command": "jupyter.replayPylanceLogStep",
@@ -987,16 +952,6 @@
                     "when": "isWorkspaceTrusted && notebookKernel =~ /^ms-toolsai.jupyter\\// || isWorkspaceTrusted && !notebookKernel"
                 },
                 {
-                    "command": "jupyter.interactive.exportasnotebook",
-                    "group": "navigation@4",
-                    "when": "isWorkspaceTrusted && notebookKernel =~ /^ms-toolsai.jupyter\\// || isWorkspaceTrusted && !notebookKernel"
-                },
-                {
-                    "command": "jupyter.interactive.exportas",
-                    "group": "navigation@5",
-                    "when": "isWorkspaceTrusted && notebookKernel =~ /^ms-toolsai.jupyter\\// || isWorkspaceTrusted && !notebookKernel"
-                },
-                {
                     "command": "jupyter.expandallcells",
                     "group": "navigation@6",
                     "when": "isWorkspaceTrusted && notebookKernel =~ /^ms-toolsai.jupyter\\// || isWorkspaceTrusted && !notebookKernel"
@@ -1011,17 +966,17 @@
                 {
                     "command": "jupyter.interactive.copyCell",
                     "group": "inline@0",
-                    "when": "isWorkspaceTrusted && notebookKernel =~ /^ms-toolsai.jupyter\\// || isWorkspaceTrusted && !notebookKernel"
+                    "when": "isWorkspaceTrusted"
                 },
                 {
                     "command": "jupyter.interactive.goToCode",
                     "group": "inline@1",
-                    "when": "isWorkspaceTrusted && notebookKernel =~ /^ms-toolsai.jupyter\\// || isWorkspaceTrusted && !notebookKernel"
+                    "when": "isWorkspaceTrusted"
                 },
                 {
                     "command": "jupyter.interactive.removeCell",
                     "group": "inline@2",
-                    "when": "isWorkspaceTrusted && notebookKernel =~ /^ms-toolsai.jupyter\\// || isWorkspaceTrusted && !notebookKernel"
+                    "when": "isWorkspaceTrusted"
                 }
             ],
             "explorer/context": [
@@ -1076,18 +1031,6 @@
                     "command": "jupyter.refreshDataViewer",
                     "category": "Jupyter",
                     "when": "isWorkspaceTrusted"
-                },
-                {
-                    "command": "jupyter.exportToHTML",
-                    "title": "%jupyter.command.jupyter.exportToHTML.title%",
-                    "category": "Jupyter",
-                    "when": "jupyter.isnativeactive && isWorkspaceTrusted"
-                },
-                {
-                    "command": "jupyter.exportToPDF",
-                    "title": "%jupyter.command.jupyter.exportToPDF.title%",
-                    "category": "Jupyter",
-                    "when": "jupyter.isnativeactive && isWorkspaceTrusted"
                 },
                 {
                     "command": "jupyter.insertCellBelowPosition",
@@ -1252,18 +1195,6 @@
                     "when": "isWorkspaceTrusted"
                 },
                 {
-                    "command": "jupyter.exportfileasnotebook",
-                    "title": "%jupyter.command.jupyter.exportfileasnotebook.title%",
-                    "category": "Jupyter",
-                    "when": "jupyter.hascodecells && jupyter.ispythonorinteractiveeactive && !notebookEditorFocused && isWorkspaceTrusted"
-                },
-                {
-                    "command": "jupyter.exportfileandoutputasnotebook",
-                    "title": "%jupyter.command.jupyter.exportfileandoutputasnotebook.title%",
-                    "category": "Jupyter",
-                    "when": "jupyter.hascodecells && jupyter.ispythonorinteractiveeactive && !notebookEditorFocused && isWorkspaceTrusted"
-                },
-                {
                     "command": "jupyter.interruptkernel",
                     "title": "%jupyter.command.jupyter.interruptkernel.title%",
                     "category": "Jupyter",
@@ -1408,18 +1339,6 @@
                     "command": "jupyter.latestExtension",
                     "title": "%DataScience.latestExtension%",
                     "category": "Jupyter",
-                    "when": "false"
-                },
-                {
-                    "command": "jupyter.export",
-                    "title": "%DataScience.notebookExportAs%",
-                    "category": "Jupyter",
-                    "when": "false"
-                },
-                {
-                    "command": "jupyter.notebookeditor.export",
-                    "title": "%DataScience.notebookExportAs%",
-                    "category": "Notebook",
                     "when": "false"
                 },
                 {

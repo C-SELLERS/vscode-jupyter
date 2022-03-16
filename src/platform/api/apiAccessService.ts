@@ -1,22 +1,22 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-import { injectable, inject, named } from 'inversify';
-import { ExtensionMode, Memento } from 'vscode';
-import { IApplicationEnvironment, IApplicationShell } from '../common/application/types';
+import { injectable, } from 'inversify';
+//import { ExtensionMode, Memento } from 'vscode';
+//import { IApplicationEnvironment, IApplicationShell } from '../common/application/types';
 import { JVSC_EXTENSION_ID } from '../common/constants';
-import { GLOBAL_MEMENTO, IExtensionContext, IMemento } from '../common/types';
-import { PromiseChain } from '../common/utils/async';
-import { Common, DataScience } from '../common/utils/localize';
-import { Telemetry } from '../datascience/constants';
-import { sendTelemetryEvent } from '../../telemetry';
+//import { GLOBAL_MEMENTO, IExtensionContext, IMemento } from '../common/types';
+//import { PromiseChain } from '../common/utils/async';
+//import { Common, DataScience } from '../common/utils/localize';
+//import { Telemetry } from '../datascience/constants';
+//import { sendTelemetryEvent } from '../telemetry';
 
-type ApiExtensionInfo = {
-    extensionId: string;
-    allowed: 'yes' | 'no';
-}[];
+//type ApiExtensionInfo = {
+//    extensionId: string;
+//    allowed: 'yes' | 'no';
+//}[];
 
-const API_ACCESS_GLOBAL_KEY = 'JUPYTER_API_ACCESS_INFORMATION';
+//const API_ACCESS_GLOBAL_KEY = 'JUPYTER_API_ACCESS_INFORMATION';
 
 // Some publishers like our own `ms-tolsai` will always be allowed to access the API.
 export const TrustedExtensionPublishers = new Set([JVSC_EXTENSION_ID.split('.')[0], 'rchiodo', 'donjayamanne']);
@@ -26,18 +26,23 @@ export const PublishersAllowedWithPrompts = new Set([JVSC_EXTENSION_ID.split('.'
 
 @injectable()
 export class ApiAccessService {
-    private readonly extensionAccess = new Map<string, Promise<{ extensionId: string; accessAllowed: boolean }>>();
-    private promiseChain = new PromiseChain();
+    //private readonly extensionAccess = new Map<string, Promise<{ extensionId: string; accessAllowed: boolean }>>();
+    //private promiseChain = new PromiseChain();
     constructor(
-        @inject(IMemento) @named(GLOBAL_MEMENTO) private globalState: Memento,
-        @inject(IApplicationShell) private appShell: IApplicationShell,
-        @inject(IApplicationEnvironment) private appEnv: IApplicationEnvironment,
-        @inject(IExtensionContext) private context: IExtensionContext
-    ) {}
+        //@inject(IMemento) @named(GLOBAL_MEMENTO) private globalState: Memento,
+        //@inject(IApplicationShell) private appShell: IApplicationShell,
+        //@inject(IApplicationEnvironment) private appEnv: IApplicationEnvironment,
+        //@inject(IExtensionContext) private context: IExtensionContext
+    ) { }
     public async getAccessInformation(info: {
         extensionId: string;
         displayName: string;
     }): Promise<{ extensionId: string; accessAllowed: boolean }> {
+
+        // Allow Access to kernel service
+        return { extensionId: info.extensionId, accessAllowed: true };
+
+        /*
         const publisherId = info.extensionId.split('.')[0];
         if (this.context.extensionMode === ExtensionMode.Test) {
             if (!TrustedExtensionPublishers.has(publisherId) || PublishersAllowedWithPrompts.has(publisherId)) {
@@ -104,5 +109,6 @@ export class ApiAccessService {
 
         this.extensionAccess.set(info.extensionId, promise);
         return promise;
+        */
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 'use strict';
 import { inject, injectable } from 'inversify';
-import { CancellationToken, NotebookControllerAffinity, Uri } from 'vscode';
+import { CancellationToken, NotebookControllerAffinity, Uri, env } from 'vscode';
 import { CancellationTokenSource, EventEmitter, NotebookDocument } from 'vscode';
 import { IExtensionSyncActivationService } from '../../platform/activation/types';
 import { IPythonExtensionChecker, IPythonApiProvider } from '../../platform/api/types';
@@ -66,6 +66,13 @@ import { INotebookControllerManager } from '../types';
 import { KernelFilterService } from './kernelFilter/kernelFilterService';
 import { NoPythonKernelsNotebookController } from './noPythonKernelsNotebookController';
 import { VSCodeNotebookController } from './vscodeNotebookController';
+import { getDisplayPath } from '../../common/platform/fs-paths';
+import { DisplayOptions } from '../displayOptions';
+//import { JupyterServerSelector } from '../jupyter/serverSelector';
+//import { DataScience } from '../../common/utils/localize';
+import { CondaService } from '../../common/process/condaService';
+import { waitForCondition } from '../../common/utils/async';
+import { debounceAsync } from '../../common/utils/decorators';
 
 // Even after shutting down a kernel, the server API still returns the old information.
 // Re-query after 2 seconds to ensure we don't get stale information.
@@ -93,7 +100,7 @@ export class NotebookControllerManager implements INotebookControllerManager, IE
         return Array.from(this.registeredControllers.values()).map((item) => item.connection);
     }
     private _controllersLoaded?: boolean;
-    private failedToFetchRemoteKernels?: boolean;
+    private failedToFetchRemoteKernels?: string;
     public get onNotebookControllerSelectionChanged() {
         return this._onNotebookControllerSelectionChanged.event;
     }
@@ -141,7 +148,6 @@ export class NotebookControllerManager implements INotebookControllerManager, IE
         @inject(KernelFilterService) private readonly kernelFilter: KernelFilterService,
         @inject(IBrowserService) private readonly browser: IBrowserService,
         @inject(CondaService) private readonly condaService: CondaService,
-        @inject(JupyterServerSelector) private readonly jupyterServerSelector: JupyterServerSelector,
         @inject(IJupyterServerUriStorage) private readonly serverUriStorage: IJupyterServerUriStorage,
         @inject(IServiceContainer) private readonly serviceContainer: IServiceContainer
     ) {
@@ -539,21 +545,23 @@ export class NotebookControllerManager implements INotebookControllerManager, IE
                 if (this.failedToFetchRemoteKernels) {
                     void this.appShell
                         .showErrorMessage(
-                            DataScience.jupyterRemoteConnectFailedModalMessage(),
+                            `Failed to connect to the QuantConnect Jupyter Server. Ensure research node availability in resources panel, then close and reopen your notebook. \n
+                            \rSee errors: ${this.failedToFetchRemoteKernels}`,
                             { modal: true },
-                            DataScience.changeJupyterRemoteConnection(),
-                            DataScience.showJupyterLogs()
+                            "Buy Nodes"
                         )
                         .then((selection) => {
                             switch (selection) {
-                                case DataScience.changeJupyterRemoteConnection():
-                                    void this.jupyterServerSelector.selectJupyterURI(true, 'prompt');
-                                    break;
-                                case DataScience.showJupyterLogs():
-                                    void this.commandManager.executeCommand('jupyter.viewOutput');
+                                case "Buy Nodes":
+                                    void env.openExternal(Uri.parse('https://www.quantconnect.com/pricing'));
                                     break;
                             }
                         });
+
+                    // Dispose this controller?
+                    //disposable.dispose()
+                    //return;
+
                 }
             });
         }
@@ -831,11 +839,13 @@ export class NotebookControllerManager implements INotebookControllerManager, IE
                 token
             });
 
+            // Be sure to reset this to undefined since there is a case where the user
+            // does fix his connection (More nodes, or tries again) and we don't want them to be stuck
+            this.failedToFetchRemoteKernels = undefined;
             const kernels = await this.remoteKernelFinder.listKernels(undefined, connection, token);
-            this.failedToFetchRemoteKernels = false;
             return kernels;
         } catch (ex) {
-            this.failedToFetchRemoteKernels = true;
+            this.failedToFetchRemoteKernels = ex.response.statusText;
             traceError('Failed to get remote kernel connections', ex);
             return [] as KernelConnectionMetadata[];
         } finally {
