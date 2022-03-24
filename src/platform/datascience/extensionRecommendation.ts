@@ -98,6 +98,14 @@ export class ExtensionRecommendationService implements IExtensionSyncActivationS
         }
     }
     private async recommendExtensionForLanguage(language: string) {
+
+        // QuantConnect : Do not recommend any extensions
+        // Include boolean if to keep compiler happy
+        let doNotShow = true;
+        if (doNotShow) {
+            return;
+        }
+
         const extensionId = extensionsThatSupportJupyterKernelLanguages.get(language.toLowerCase());
         if (!extensionId || this.extensions.getExtension(extensionId)) {
             return;

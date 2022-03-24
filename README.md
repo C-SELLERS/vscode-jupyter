@@ -1,4 +1,11 @@
-# Jupyter Extension for Visual Studio Code
+# Jupyter Extension for Visual Studio Code [QC]
+
+This private fork is modified and maintained by QuantConnect. It includes specific tweaks to improve the cloud code experience for our users.
+
+We build a `vsix` package off this forks main and include it in our `code.quantconnect.com` repo for builds. Follow the bottom of `CONTRIBUTING.md` for steps on building.
+
+Changes ideally will be kept to a minimum, or at least easily repeatable to allow for easy rebasing onto the public origin branch `microsoft/vscode-jupyter`.
+
 
 A [Visual Studio Code](https://code.visualstudio.com/) [extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) that provides basic notebook support for [language kernels](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels) that are supported in [Jupyter Notebooks](https://jupyter.org/) today. Many language kernels will work with no modification. To enable advanced features, modifications may be needed in the VS Code language extensions.
 

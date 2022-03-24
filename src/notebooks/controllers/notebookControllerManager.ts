@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 'use strict';
 import { inject, injectable } from 'inversify';
-import { CancellationToken, NotebookControllerAffinity, Uri, env } from 'vscode';
+import { CancellationToken, NotebookControllerAffinity, Uri } from 'vscode';
 import { CancellationTokenSource, EventEmitter, NotebookDocument } from 'vscode';
 import { IExtensionSyncActivationService } from '../../platform/activation/types';
 import { IPythonExtensionChecker, IPythonApiProvider } from '../../platform/api/types';
@@ -100,7 +100,7 @@ export class NotebookControllerManager implements INotebookControllerManager, IE
         return Array.from(this.registeredControllers.values()).map((item) => item.connection);
     }
     private _controllersLoaded?: boolean;
-    private failedToFetchRemoteKernels?: string;
+    private failedToFetchRemoteKernels?: boolean;
     public get onNotebookControllerSelectionChanged() {
         return this._onNotebookControllerSelectionChanged.event;
     }
@@ -543,25 +543,9 @@ export class NotebookControllerManager implements INotebookControllerManager, IE
                     return;
                 }
                 if (this.failedToFetchRemoteKernels) {
-                    void this.appShell
-                        .showErrorMessage(
-                            `Failed to connect to the QuantConnect Jupyter Server. Ensure research node availability in resources panel, then close and reopen your notebook. \n
-                            \rSee errors: ${this.failedToFetchRemoteKernels}`,
-                            { modal: true },
-                            "Buy Nodes"
-                        )
-                        .then((selection) => {
-                            switch (selection) {
-                                case "Buy Nodes":
-                                    void env.openExternal(Uri.parse('https://www.quantconnect.com/pricing'));
-                                    break;
-                            }
-                        });
-
-                    // Dispose this controller?
-                    //disposable.dispose()
-                    //return;
-
+                    // Do nothing; pretend to be local
+                    disposable.dispose();
+                    return;
                 }
             });
         }
@@ -839,13 +823,11 @@ export class NotebookControllerManager implements INotebookControllerManager, IE
                 token
             });
 
-            // Be sure to reset this to undefined since there is a case where the user
-            // does fix his connection (More nodes, or tries again) and we don't want them to be stuck
-            this.failedToFetchRemoteKernels = undefined;
+            this.failedToFetchRemoteKernels = false;
             const kernels = await this.remoteKernelFinder.listKernels(undefined, connection, token);
             return kernels;
         } catch (ex) {
-            this.failedToFetchRemoteKernels = ex.response.statusText;
+            this.failedToFetchRemoteKernels = true;
             traceError('Failed to get remote kernel connections', ex);
             return [] as KernelConnectionMetadata[];
         } finally {
