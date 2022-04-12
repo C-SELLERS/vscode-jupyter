@@ -543,9 +543,7 @@ export class NotebookControllerManager implements INotebookControllerManager, IE
                     return;
                 }
                 if (this.failedToFetchRemoteKernels) {
-                    // Do nothing; pretend to be local
-                    disposable.dispose();
-                    return;
+                    // NOP; Don't show message from extension
                 }
             });
         }
