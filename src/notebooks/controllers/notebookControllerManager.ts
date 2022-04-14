@@ -28,7 +28,6 @@ import {
 } from '../../platform/common/types';
 import { waitForCondition } from '../../platform/common/utils/async';
 import { debounceAsync } from '../../platform/common/utils/decorators';
-import { DataScience } from '../../platform/common/utils/localize';
 import { noop } from '../../platform/common/utils/misc';
 import { StopWatch } from '../../platform/common/utils/stopWatch';
 import { DisplayOptions } from '../../platform/datascience/displayOptions';
@@ -50,7 +49,6 @@ import {
     getDisplayNameOrNameOfKernelConnection
 } from '../../kernels/helpers';
 import { NotebookIPyWidgetCoordinator } from '../../kernels/ipywidgets-message-coordination/notebookIPyWidgetCoordinator';
-import { JupyterServerSelector } from '../../kernels/jupyter/serverSelector';
 import { PreferredRemoteKernelIdProvider } from '../../kernels/raw/finder/preferredRemoteKernelIdProvider';
 import { ILocalKernelFinder, IRemoteKernelFinder } from '../../kernels/raw/types';
 import {
@@ -66,13 +64,8 @@ import { INotebookControllerManager } from '../types';
 import { KernelFilterService } from './kernelFilter/kernelFilterService';
 import { NoPythonKernelsNotebookController } from './noPythonKernelsNotebookController';
 import { VSCodeNotebookController } from './vscodeNotebookController';
-import { getDisplayPath } from '../../common/platform/fs-paths';
-import { DisplayOptions } from '../displayOptions';
 //import { JupyterServerSelector } from '../jupyter/serverSelector';
 //import { DataScience } from '../../common/utils/localize';
-import { CondaService } from '../../common/process/condaService';
-import { waitForCondition } from '../../common/utils/async';
-import { debounceAsync } from '../../common/utils/decorators';
 
 // Even after shutting down a kernel, the server API still returns the old information.
 // Re-query after 2 seconds to ensure we don't get stale information.
