@@ -91,12 +91,6 @@ jobs:
           echo "vsix_name=ms-toolsai-jupyter-insiders.vsix" >> $GITHUB_ENV
           echo "test_matrix_os=[\"ubuntu-latest\", \"windows-latest\"]" >> $GITHUB_ENV
 
-      - name: pr release push
-        if: github.event_name == 'pull_request' && contains(github.event.body, 'publish')
-        run: |
-          echo "release_channel=stable" >> $GITHUB_ENV
-          echo "package_command=packagePreRelease" >> $GITHUB_ENV
-
       - name: pre-release
         if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event.inputs.publishPreRelease == 'Yes, publish pre-release') && github.ref == 'refs/heads/main'
         # We're not running CI on macOS for now because it's one less matrix entry to lower the number of runners used,
@@ -105,16 +99,8 @@ jobs:
           echo "vsix_name=ms-toolsai-jupyter-insiders.vsix" >> $GITHUB_ENV
           echo "test_matrix_os=[\"ubuntu-latest\", \"windows-latest\"]" >> $GITHUB_ENV
 
-      #   - name:
-      #       pre-release channel
-      #       # Scheduled builds will publish pre-release builds.
-      #     if: (github.event_name == 'schedule' || github.event.inputs.publishPreRelease == 'Yes, publish pre-release') && github.ref == 'refs/heads/main'
-      #     run: |
-      #       echo "package_command=packagePreRelease" >> $GITHUB_ENV
-      #       echo "release_channel=pre-release" >> $GITHUB_ENV
-
       - name: release
-        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && contains(github.ref, 'refs/heads/release')
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && contains(github.ref, 'refs/heads/qc-release')
         run: |
           echo "vsix_name=ms-toolsai-jupyter-release.vsix" >> $GITHUB_ENV
           echo "test_matrix_os=[\"ubuntu-latest\"]" >> $GITHUB_ENV
@@ -170,7 +156,6 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    if: github.repository == 'microsoft/vscode-jupyter'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -248,7 +233,6 @@ jobs:
     needs: pick_environment
     name: Type Script Tests
     runs-on: ${{ matrix.os }}
-    if: github.repository == 'microsoft/vscode-jupyter'
     strategy:
       fail-fast: false
       matrix:
