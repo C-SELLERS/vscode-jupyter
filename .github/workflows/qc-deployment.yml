@@ -748,13 +748,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [pick_environment, build-vsix] #, smoke-tests]
     environment:
-      name: ${{needs.pick_environment.outputs.release_channel}}
+      name: deployment
     steps:
       - name: dump_event
         run: |
           echo "Event_name is ${{ github.event_name }}"
           echo "Ref is ${{ github.ref }}"
-          echo "Release Channel (Environment) is is ${{needs.pick_environment.outputs.release_channel}}"
+          echo "Release Channel (Environment) is deployment"
           echo "VSIX Name is ${{ needs.pick_environment.outputs.vsix_name }}"
 
       - name: Checkout
@@ -797,7 +797,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           tag_name: ${{steps.version.outputs.version}}
           release_name: Release ${{steps.version.outputs.version}}
