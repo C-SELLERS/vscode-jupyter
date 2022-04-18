@@ -59,7 +59,7 @@ jobs:
         if: steps.proceed.outputs.result == 1 && steps.day.outputs.number == 6
         uses: actions/github-script@v4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ github.token }}
           script: |
             github.issues.addAssignees({
               issue_number: context.issue.number,
@@ -71,7 +71,7 @@ jobs:
         if: steps.proceed.outputs.result == 1 && steps.day.outputs.number == 0
         uses: actions/github-script@v4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ github.token }}
           script: |
             github.issues.addAssignees({
               issue_number: context.issue.number,
@@ -83,7 +83,7 @@ jobs:
         if: steps.proceed.outputs.result == 1 && steps.day.outputs.number == 1 && steps.hour.outputs.hour < 16
         uses: actions/github-script@v4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ github.token }}
           script: |
             github.issues.addAssignees({
               issue_number: context.issue.number,
@@ -95,7 +95,7 @@ jobs:
         if: steps.proceed.outputs.result == 1 && (steps.day.outputs.number == 1 && steps.hour.outputs.hour >= 16) || (steps.day.outputs.number == 2 && steps.hour.outputs.hour < 16)
         uses: actions/github-script@v4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ github.token }}
           script: |
             github.issues.addAssignees({
               issue_number: context.issue.number,
@@ -107,7 +107,7 @@ jobs:
         if: steps.proceed.outputs.result == 1 && (steps.day.outputs.number == 2 && steps.hour.outputs.hour >= 16) || (steps.day.outputs.number == 3 && steps.hour.outputs.hour < 16)
         uses: actions/github-script@v4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ github.token }}
           script: |
             github.issues.addAssignees({
               issue_number: context.issue.number,
@@ -119,7 +119,7 @@ jobs:
         if: steps.proceed.outputs.result == 1 && (steps.day.outputs.number == 3 && steps.hour.outputs.hour >= 16) || (steps.day.outputs.number == 4 && steps.hour.outputs.hour < 16)
         uses: actions/github-script@v4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ github.token }}
           script: |
             github.issues.addAssignees({
               issue_number: context.issue.number,
@@ -131,7 +131,7 @@ jobs:
         if: steps.proceed.outputs.result == 1 && (steps.day.outputs.number == 4 && steps.hour.outputs.hour >= 16) || (steps.day.outputs.number == 5)
         uses: actions/github-script@v4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ github.token }}
           script: |
             github.issues.addAssignees({
               issue_number: context.issue.number,
