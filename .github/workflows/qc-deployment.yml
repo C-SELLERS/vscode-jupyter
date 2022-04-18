@@ -778,13 +778,11 @@ jobs:
           name: ${{needs.pick_environment.outputs.vsix_name}}
 
       - name: Extract Extension
-        if: needs.pick_environment.outputs.release_channel == 'stable'
         shell: bash
         run: |
           python -c "import zipfile;zip=zipfile.ZipFile('${{needs.pick_environment.outputs.vsix_name}}', 'r');zip.extractall('tmp')"
 
       - name: Get Version
-        if: needs.pick_environment.outputs.release_channel == 'stable'
         id: version
         run: |
           echo ::set-output name=version::$(node -p -e "require('./package.json').version")
