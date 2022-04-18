@@ -801,7 +801,8 @@ jobs:
         with:
           tag_name: ${{steps.version.outputs.version}}
           release_name: Release ${{steps.version.outputs.version}}
-          body_path: RELEASE_CHANGELOG.md
+          body: |
+            QC RELEASE
           draft: false
           prerelease: false
 
