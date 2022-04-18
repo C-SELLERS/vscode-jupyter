@@ -315,7 +315,6 @@ jobs:
   vscodeTests:
     name: Tests # These tests run with Python extension & real Jupyter
     runs-on: ${{ matrix.os }}
-    if: github.repository == 'microsoft/vscode-jupyter'
     env:
       VSC_FORCE_REAL_JUPYTER: 1
       VSC_PYTHON_FORCE_LOGGING: 1
@@ -747,7 +746,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: [pick_environment, build-vsix, lint, ts_tests, smoke-tests]
+    needs: [pick_environment, build-vsix, smoke-tests]
     environment:
       name: ${{needs.pick_environment.outputs.release_channel}}
     steps:
