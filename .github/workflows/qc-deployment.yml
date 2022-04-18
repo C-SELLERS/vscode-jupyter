@@ -746,7 +746,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: [pick_environment, build-vsix, smoke-tests]
+    needs: [pick_environment, build-vsix] #, smoke-tests]
     environment:
       name: ${{needs.pick_environment.outputs.release_channel}}
     steps:
